@@ -1,11 +1,11 @@
 apiVersion: v1   # core Kubernetes API — used for basic objects like Services, Pods, Namespaces
 kind: Service    # the type of object — a router that directs traffic to pods
 metadata:
-  name: my-webapp    # name of this Service object
-  namespace: default # must be in the same namespace as the pods it routes to
+  name: my-webapp-service  # name of this Service object
+  namespace: default        # must be in the same namespace as the pods it routes to
 spec:
   selector:
-    app: my-webapp   # finds pods with this label and routes traffic to them
+    app: my-webapp-pod   # finds pods with this label and routes traffic to them
   ports:
     - port: 80       # the port this Service listens on inside the cluster
       targetPort: 80 # the port on the pod to forward traffic to (must match what the app listens on)
