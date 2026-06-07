@@ -1,3 +1,11 @@
+# Ingress defines routing rules for external HTTP traffic into the cluster.
+# It has two parts:
+#   1. Ingress Controller — the actual software that handles traffic (installed once as cluster infrastructure,
+#      not in this repo). We use nginx locally. In EKS, teams typically use the AWS Load Balancer Controller.
+#      Installing the controller is a one-time cluster setup, similar to how ArgoCD itself is installed.
+#   2. Ingress Resource (this file) — the routing rules for your specific app. This belongs in Git
+#      and is managed by ArgoCD like any other app config.
+
 apiVersion: networking.k8s.io/v1  # API for Ingress objects
 kind: Ingress                      # the type of object — defines routing rules for external traffic
 metadata:
@@ -6,9 +14,10 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: / # tells nginx to forward requests to the root path of the pod
 spec:
-  ingressClassName: nginx          # which ingress controller to use (we installed nginx)
+  ingressClassName: nginx          # which ingress controller to use (we installed nginx as cluster infra)
   rules:
-    - host: my-webapp.local        # the domain name to match — we'll fake this in /etc/hosts
+    - host: my-webapp.local        # the domain name to match — faked locally via /etc/hosts
+                                   # in EKS this would be a real domain e.g. myapp.company.com
       http:
         paths:
           - path: /                # match all traffic to this domain
