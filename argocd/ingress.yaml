@@ -1,0 +1,26 @@
+# Ingress for ArgoCD UI
+# Exposes ArgoCD at argocd.local without needing kubectl port-forward.
+# Remember to add to /etc/hosts on your Mac:
+#   127.0.0.1 argocd.local
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-ingress
+  namespace: argocd
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"  # ArgoCD uses TLS, pass it through directly
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # tell nginx to talk HTTPS to the ArgoCD backend
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: argocd.local   # fake domain — added to /etc/hosts on Mac
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server  # the ArgoCD server service
+                port:
+                  number: 443
