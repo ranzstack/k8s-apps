@@ -1,20 +1,20 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: apps/v1  # which Kubernetes API to use — apps/v1 is standard for Deployments
+kind: Deployment     # the type of object we're creating
 metadata:
-  name: my-webapp
-  namespace: default
+  name: my-webapp    # the name of this Deployment object (used by kubectl, e.g. kubectl get deployment my-webapp)
+  namespace: default # which namespace to deploy into
 spec:
-  replicas: 2
+  replicas: 4        # how many pod copies to keep running at all times
   selector:
     matchLabels:
-      app: my-webapp
-  template:
+      app: my-webapp # tells the Deployment which pods it owns — must match the labels below
+  template:          # the blueprint for each pod the Deployment creates
     metadata:
       labels:
-        app: my-webapp
+        app: my-webapp # sticky tag on every pod — the Service uses this to find pods to route traffic to
     spec:
       containers:
-        - name: my-webapp
-          image: nginxdemos/hello:latest
+        - name: my-webapp               # name of the container inside the pod
+          image: nginxdemos/hello:latest # Docker image to run — pulled from Docker Hub
           ports:
-            - containerPort: 80
+            - containerPort: 80         # informational only — documents that the app listens on port 80
